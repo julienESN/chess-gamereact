@@ -73,7 +73,7 @@
     ],
     "max-lines-per-function": [
       "error",
-      { "max": 100, "skipBlankLines": true, "skipComments": true }
+      { "max": 50, "skipBlankLines": true, "skipComments": true }
     ],
     "max-nested-callbacks": ["error", 4],
     "max-params": ["error", 3],
@@ -82,7 +82,7 @@
     "no-alert": "error",
     "no-bitwise": "error",
     "no-caller": "error",
-    // "no-console": "error",
+    "no-console": "error",
     "no-else-return": "error",
     "no-empty-function": "error",
     "no-empty-static-block": "error",
