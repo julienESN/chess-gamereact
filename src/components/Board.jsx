@@ -1,13 +1,12 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { useChess } from "../context/ChessContext"
 import Square from "./Square"
 
 const Board = () => {
   const { board } = useChess()
-
-  return (
-    <div className="mx-auto max-w-[90vw]">
-      {board.map((row, rowIndex) => (
+  const renderedBoard = useMemo(
+    () =>
+      board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex justify-center">
           {row.map((piece, cellIndex) => (
             <Square
@@ -17,9 +16,11 @@ const Board = () => {
             />
           ))}
         </div>
-      ))}
-    </div>
+      )),
+    [board]
   )
+
+  return <div className="mx-auto max-w-[90vw]">{renderedBoard}</div>
 }
 
 export default Board

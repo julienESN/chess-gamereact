@@ -1,8 +1,8 @@
-import React from "react"
+import React, { memo } from "react"
 import { useChess } from "../context/ChessContext"
-
+import Timer from "./Timer"
 const Dashboard = () => {
-  const { gameStatus, startGame, resetGame, playerTimes } = useChess()
+  const { gameStatus, startGame, resetGame } = useChess()
 
   return (
     <div className="dashboard">
@@ -18,12 +18,9 @@ const Dashboard = () => {
         </button>
       )}
 
-      <div className="timer">
-        <div>Temps Joueur 1: {playerTimes.player1}</div>
-        <div>Temps Joueur 2: {playerTimes.player2}</div>
-      </div>
+      <Timer />
     </div>
   )
 }
 
-export default Dashboard
+export default memo(Dashboard)

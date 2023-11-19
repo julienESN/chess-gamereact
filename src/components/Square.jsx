@@ -12,7 +12,6 @@ const getFileLabel = (x) => String.fromCharCode(97 + x)
 const Square = ({ piece, position }) => {
   const { handleSquareClick } = useChess()
   const handleClick = useCallback(() => {
-    console.log("Clic sur la case avec", { position, piece })
     handleSquareClick(position, piece)
   }, [position, piece, handleSquareClick])
   const darkSquare = isDarkSquare(position)

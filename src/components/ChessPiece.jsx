@@ -1,3 +1,5 @@
+import React, { memo } from "react"
+
 const ChessPiece = ({ piece }) => {
   const pieceUnicode = {
     Rook: "♖",
@@ -27,4 +29,4 @@ const ChessPiece = ({ piece }) => {
   )
 }
 
-export default ChessPiece
+export default memo(ChessPiece)
