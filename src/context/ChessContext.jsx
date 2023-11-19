@@ -1,116 +1,100 @@
-import React, { createContext, useContext, useState, useCallback } from "react"
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useReducer
+} from "react"
 import { isPawnMoveLegal } from "../hooks/useChessLogic"
-const initialState = {
-  board: createInitialBoard(),
-  currentPlayer: 1,
-  capturedPieces: { player1: [], player2: [] },
-  playerTimes: { player1: 0, player2: 0 },
-  gameStatus: "waiting",
-  moveHistory: []
-}
+import {
+  SET_BOARD,
+  START_GAME,
+  CHANGE_PLAYER,
+  RESET_GAME,
+  MOVE_PIECE,
+  chessReducer,
+  initialState
+} from "../reducers/chessReducer"
+
 const ChessContext = createContext()
 const ChessProvider = ({ children }) => {
-  const [state, setState] = useState(initialState)
+  const [state, dispatch] = useReducer(chessReducer, initialState)
   const [selectedPiece, setSelectedPiece] = useState(null)
-  const setBoard = newBoard => {
-    setState(prevState => ({ ...prevState, board: newBoard }))
-  }
+  const setBoard = useCallback((newBoard) => {
+    dispatch({ type: SET_BOARD, payload: newBoard })
+  }, [])
   const startGame = useCallback(() => {
-    setState(prevState => ({ ...prevState, gameStatus: "playing" }))
+    dispatch({ type: START_GAME })
   }, [])
   const resetGame = useCallback(() => {
-    setState(initialState)
-  }, [initialState])
-  const handleSquareClick = useCallback((toPosition, piece) => {
-    console.log("handleSquareClick appelé", { toPosition, piece, gameState: state.gameStatus })
+    console.log("resetGame appelé")
+    dispatch({ type: RESET_GAME })
+  }, [])
+  const canMove = useCallback(
+    (piece) =>
+      (piece.color === "white" && state.currentPlayer === 1) ||
+      (piece.color === "black" && state.currentPlayer === 2),
+    [state.currentPlayer]
+  )
+  const movePiece = useCallback(
+    (pieceToMove, toPosition) => {
+      if (pieceToMove.type.toLowerCase() === "pawn") {
+        const moveIsLegal = isPawnMoveLegal({
+          fromPosition: pieceToMove.position,
+          toPosition,
+          board: state.board
+        })
 
-    if (state.gameStatus !== "playing") {
-      console.log("Le jeu n'est pas en cours.")
-
-
-      return
-    }
-
-    // Si aucune pièce n'est sélectionnée, sélectionnez la pièce cliquée
-    if (!selectedPiece && piece) {
-      console.log("Pièce sélectionnée pour le mouvement:", piece)
-      setSelectedPiece(piece)
-
-
-      return
-    }
-
-    // Si une pièce est sélectionnée, vérifiez si le mouvement est légal
-    if (selectedPiece) {
-      console.log("Tentative de mouvement", { fromPosition: selectedPiece.position, toPosition, currentPlayer: state.currentPlayer })
-
-      if (selectedPiece.type.toLowerCase() === "pawn") {
-        const moveIsLegal = isPawnMoveLegal({ fromPosition: selectedPiece.position, toPosition, board: state.board })
-        console.log("Résultat de isPawnMoveLegal", moveIsLegal)
-
-        if (moveIsLegal) {
-          const newBoard = [...state.board]
-          newBoard[selectedPiece.position.x][selectedPiece.position.y] = null
-          newBoard[toPosition.x][toPosition.y] = { ...selectedPiece, position: toPosition }
-
-          setState(prevState => ({
-            ...prevState,
-            board: newBoard,
-            currentPlayer: prevState.currentPlayer === 1 ? 2 : 1,
-          }))
-        } else {
-          console.log("Mouvement illégal.")
+        if (moveIsLegal && canMove(pieceToMove)) {
+          dispatch({ type: CHANGE_PLAYER })
+          dispatch({
+            type: MOVE_PIECE,
+            payload: {
+              fromPosition: pieceToMove.position,
+              toPosition,
+              piece: { ...pieceToMove, position: toPosition }
+            }
+          })
+          console.log("test")
         }
       }
+    },
+    [state.board, canMove, dispatch]
+  )
+  const handlePieceSelection = useCallback(
+    (piece) => {
+      console.log("handlePieceSelection appelé avec", piece)
 
-      // Réinitialiser la pièce sélectionnée après le mouvement
-      setSelectedPiece(null)
-    }
-  }, [state, setState, selectedPiece])
+      if (piece && canMove(piece)) {
+        setSelectedPiece(piece)
+        console.log("Après setSelectedPiece:", piece)
+      }
+    },
+    [canMove, selectedPiece]
+  )
+  const handleSquareClick = useCallback(
+    (toPosition, piece) => {
+      if (state.gameStatus !== "playing") {
+        return
+      }
 
-
+      if (!selectedPiece) {
+        handlePieceSelection(piece)
+      } else {
+        movePiece(selectedPiece, toPosition)
+        setSelectedPiece(null)
+      }
+    },
+    [state.gameStatus, selectedPiece, movePiece, handlePieceSelection]
+  )
 
   return (
     <ChessContext.Provider
-      value={{
-        ...state,
-        setBoard,
-        resetGame,
-        startGame,
-        handleSquareClick
-      }}>
+      value={{ ...state, setBoard, resetGame, startGame, handleSquareClick }}>
       {children}
     </ChessContext.Provider>
   )
 }
-const useChess = () => {
-  const context = useContext(ChessContext)
-
-  return context
-}
-
-function createInitialBoard() {
-  const initialPieces = {
-    r: "rook", n: "knight", b: "bishop", q: "queen", k: "king", p: "pawn",
-    R: "Rook", N: "Knight", B: "Bishop", Q: "Queen", K: "King", P: "Pawn"
-  }
-  const createRow = (pieces, rowIndex) => pieces.map((piece, colIndex) => ({
-    type: initialPieces[piece],
-    color: piece === piece.toUpperCase() ? "white" : "black",
-    position: { x: rowIndex, y: colIndex }
-  }))
-
-  return [
-    createRow(["r", "n", "b", "q", "k", "b", "n", "r"], 0),
-    createRow(["p", "p", "p", "p", "p", "p", "p", "p"], 1),
-    new Array(8).fill(null),
-    new Array(8).fill(null),
-    new Array(8).fill(null),
-    new Array(8).fill(null),
-    createRow(["P", "P", "P", "P", "P", "P", "P", "P"], 6),
-    createRow(["R", "N", "B", "Q", "K", "B", "N", "R"], 7)
-  ]
-}
-
+const useChess = () => useContext(ChessContext)
 
 export { ChessProvider, useChess }
