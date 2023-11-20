@@ -20,9 +20,8 @@ const ChessPiece = ({ piece }) => {
 
   return (
     <div
-      className={`flex items-center justify-center h-full w-full ${
-        piece.color === "white" ? "text-gray-800" : "text-gray-300"
-      }`}
+      className={`flex items-center justify-center h-full w-full ${piece.color === "white" ? "text-gray-800" : "text-gray-300"
+        }`}
       style={{ fontSize }}>
       {unicode}
     </div>

@@ -28,7 +28,6 @@ export const chessReducer = (state, action) => {
       const newBoard = [...state.board]
       newBoard[fromPosition.x][fromPosition.y] = null
       newBoard[toPosition.x][toPosition.y] = piece
-      console.log(initialState)
 
       return {
         ...state,

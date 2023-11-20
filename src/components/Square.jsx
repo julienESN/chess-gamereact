@@ -4,8 +4,7 @@ import { useChess } from "../context/ChessContext"
 
 const isDarkSquare = (position) => (position.x + position.y) % 2 === 1
 const getSquareClass = (isDark) =>
-  `${
-    isDark ? "bg-lime-800" : "bg-lime-100"
+  `${isDark ? "bg-lime-800" : "bg-lime-100"
   } w-[6vw] h-[10vh] flex justify-center items-center relative`
 const getRankLabel = (y) => 8 - y
 const getFileLabel = (x) => String.fromCharCode(97 + x)

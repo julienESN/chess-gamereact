@@ -30,7 +30,5 @@ export function createInitialBoard() {
     createRow(["R", "N", "B", "Q", "K", "B", "N", "R"], 7)
   ]
 
-  console.log("Initial board:", board)
-
   return board
 }
