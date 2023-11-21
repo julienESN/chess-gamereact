@@ -1,12 +1,21 @@
 import { useCallback } from "react"
-import {
-  SET_BOARD,
-  START_GAME,
-  CHANGE_PLAYER,
-  RESET_GAME,
-  MOVE_PIECE
-} from "../reducers/chessReducer"
-import { isPawnMoveLegal } from "../hooks/useChessLogic"
+import { SET_BOARD, START_GAME, RESET_GAME } from "../reducers/chessReducer"
+import { isPawnMoveLegal } from "./movePawn"
+import { isBishopMoveLegal } from "./moveBishop"
+import { isKingMoveLegal } from "./moveKing"
+import { isRookMoveLegal } from "./moveRook"
+import { isKnightMoveLegal } from "./moveKnight"
+import { isQueenMoveLegal } from "./moveQueen"
+import { movePieceFunction } from "./movePiece"
+import { isMoveLegal as isMoveLegalFunction } from "./isMoveLegal"
+const moveLegalityFunctions = {
+  pawn: isPawnMoveLegal,
+  king: isKingMoveLegal,
+  bishop: isBishopMoveLegal,
+  rook: isRookMoveLegal,
+  knight: isKnightMoveLegal,
+  queen: isQueenMoveLegal
+}
 
 export const useGameControls = (state, dispatch) => {
   const setBoard = useCallback(
@@ -27,29 +36,13 @@ export const useGameControls = (state, dispatch) => {
       (piece.color === "black" && state.currentPlayer === 2),
     [state.currentPlayer]
   )
+  const isMoveLegal = useCallback(
+    isMoveLegalFunction(moveLegalityFunctions, state),
+    [state, moveLegalityFunctions]
+  )
   const movePiece = useCallback(
-    (pieceToMove, toPosition) => {
-      if (
-        pieceToMove.type.toLowerCase() === "pawn" &&
-        isPawnMoveLegal({
-          fromPosition: pieceToMove.position,
-          toPosition,
-          board: state.board
-        }) &&
-        canMove(pieceToMove)
-      ) {
-        dispatch({ type: CHANGE_PLAYER })
-        dispatch({
-          type: MOVE_PIECE,
-          payload: {
-            fromPosition: pieceToMove.position,
-            toPosition,
-            piece: { ...pieceToMove, position: toPosition }
-          }
-        })
-      }
-    },
-    [state.board, state.currentPlayer, dispatch]
+    movePieceFunction({ dispatch, state, isMoveLegal, canMove }),
+    [dispatch, state, isMoveLegal, canMove]
   )
 
   return { setBoard, startGame, resetGame, movePiece, canMove }

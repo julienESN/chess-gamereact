@@ -24,16 +24,19 @@ export const chessReducer = (state, action) => {
       }
 
     case MOVE_PIECE: {
-      const { fromPosition, toPosition, piece } = action.payload
+      const { fromPosition, toPosition, piece, notation } = action.payload
       const newBoard = [...state.board]
       newBoard[fromPosition.x][fromPosition.y] = null
       newBoard[toPosition.x][toPosition.y] = piece
+      const newMoveCount = { ...state.moveCount }
+      const currentPlayer = state.currentPlayer === 1 ? "player1" : "player2"
+      newMoveCount[currentPlayer] += 1
 
       return {
         ...state,
         board: newBoard,
         currentPlayer: state.currentPlayer === 1 ? 2 : 1,
-        moveHistory: [...state.moveHistory, { fromPosition, toPosition }]
+        moveHistory: [...state.moveHistory, notation]
       }
     }
 

@@ -1,10 +1,12 @@
 //Formate moi sa
 Make a chess game playable on the same machine by two human players. 
 - you MUST upload ONLY a txt file with the URL to your CodeSandBox, and it must be named: firstName_lastName.txt (full small case & compound names: jean-pierre_de-lavillette.txt); 
-- you must implement the move rules for each pieces; 
+
+- DONE you must implement the move rules for each pieces; 
 - count moves for each player; 
 - count the pieces eaten by player; 
-- start & reset button in accordance to the state of the game; 
+- DONE start & reset button in accordance to the state of the game; 
+
 - you can't use any library expect those seen during class; 
 - CSS MUST BE DONE through tailwindcss; 
 - your code must follow all the good practices seen during class and use all the appropriate React hooks; 

@@ -1,11 +1,12 @@
 import React, { memo } from "react"
 import { useChess } from "../context/ChessContext"
-import Timer from "./Timer"
+import AlgebraicNotationDisplay from "./AlgebraicNotationDisplay"
 const Dashboard = () => {
   const { gameStatus, startGame, resetGame } = useChess()
 
   return (
     <div className="dashboard">
+      <AlgebraicNotationDisplay />
       {gameStatus === "waiting" && (
         <button onClick={startGame} className="start-button">
           Commencer la Partie
@@ -18,7 +19,6 @@ const Dashboard = () => {
         </button>
       )}
 
-      <Timer />
     </div>
   )
 }

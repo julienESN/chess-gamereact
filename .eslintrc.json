@@ -56,7 +56,7 @@
     "eqeqeq": ["error", "always"],
     "func-name-matching": "error",
     "func-names": "error",
-    "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
+    "func-style": ["error", "expression", { "allowArrowFunctions": true }],
     "grouped-accessor-pairs": ["error", "getBeforeSet"],
     "guard-for-in": "error",
     "init-declarations": ["error", "always"],

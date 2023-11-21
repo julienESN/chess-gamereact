@@ -1,4 +1,4 @@
-export function createInitialBoard() {
+export const createInitialBoard = () => {
   const initialPieces = {
     r: "rook",
     n: "knight",
@@ -19,7 +19,8 @@ export function createInitialBoard() {
       color: piece === piece.toUpperCase() ? "white" : "black",
       position: { x: rowIndex, y: colIndex }
     }))
-  const board = [
+
+  return [
     createRow(["r", "n", "b", "q", "k", "b", "n", "r"], 0),
     createRow(["p", "p", "p", "p", "p", "p", "p", "p"], 1),
     new Array(8).fill(null),
@@ -29,6 +30,4 @@ export function createInitialBoard() {
     createRow(["P", "P", "P", "P", "P", "P", "P", "P"], 6),
     createRow(["R", "N", "B", "Q", "K", "B", "N", "R"], 7)
   ]
-
-  return board
 }

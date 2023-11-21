@@ -2,7 +2,7 @@ import React, { useMemo } from "react"
 import { useChess } from "../context/ChessContext"
 import Square from "./Square"
 
-const Board = () => {
+const ChessBoard = () => {
   const { board } = useChess()
   const renderedBoard = useMemo(
     () =>
@@ -23,4 +23,4 @@ const Board = () => {
   return <div className="mx-auto max-w-[90vw]">{renderedBoard}</div>
 }
 
-export default Board
+export default ChessBoard
