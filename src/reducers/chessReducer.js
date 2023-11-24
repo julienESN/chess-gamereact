@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { createInitialBoard } from "../utils/createInitialBoard"
 
 export const SET_BOARD = "SET_BOARD"
@@ -5,6 +6,7 @@ export const START_GAME = "START_GAME"
 export const CHANGE_PLAYER = "CHANGE_PLAYER"
 export const RESET_GAME = "RESET_GAME"
 export const MOVE_PIECE = "MOVE_PIECE"
+export const CAPTURE_PIECE = "CAPTURE_PIECE"
 export const chessReducer = (state, action) => {
   switch (action.type) {
     case SET_BOARD:
@@ -37,6 +39,22 @@ export const chessReducer = (state, action) => {
         board: newBoard,
         currentPlayer: state.currentPlayer === 1 ? 2 : 1,
         moveHistory: [...state.moveHistory, notation]
+      }
+    }
+
+    case CAPTURE_PIECE: {
+      const { player, capturedPiece } = action.payload
+      const playerKey = player === 1 ? "player1" : "player2"
+      console.log(
+        `Capture piece: Player ${playerKey} captured ${capturedPiece.type}`
+      )
+
+      return {
+        ...state,
+        capturedPieces: {
+          ...state.capturedPieces,
+          [playerKey]: [...state.capturedPieces[playerKey], capturedPiece]
+        }
       }
     }
 

@@ -11,6 +11,4 @@ const App = () => (
   </ChessProvider>
 )
 
-
 export default App
-
