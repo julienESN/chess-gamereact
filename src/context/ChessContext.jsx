@@ -39,6 +39,6 @@ const ChessProvider = ({ children }) => {
     </ChessContext.Provider>
   )
 }
-const useChess = () => useContext(ChessContext)
+const useChessContext = () => useContext(ChessContext)
 
-export { ChessProvider, useChess }
+export { ChessProvider, useChessContext }

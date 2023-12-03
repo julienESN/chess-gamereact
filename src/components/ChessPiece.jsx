@@ -1,29 +1,14 @@
+// ChessPiece.jsx
 import React, { memo } from "react"
 
 const ChessPiece = ({ piece }) => {
-  const pieceUnicode = {
-    Rook: "♖",
-    Knight: "♘",
-    Bishop: "♗",
-    Queen: "♕",
-    King: "♔",
-    Pawn: "♙",
-    rook: "♜",
-    knight: "♞",
-    bishop: "♝",
-    queen: "♛",
-    king: "♚",
-    pawn: "♟︎"
+  if (!piece) {
+    return null
   }
-  const unicode = pieceUnicode[piece.type]
-  const fontSize = `calc(2vw + 2vh)`
 
   return (
-    <div
-      className={`flex items-center justify-center h-full w-full ${piece.color === "white" ? "text-gray-800" : "text-gray-300"
-        }`}
-      style={{ fontSize }}>
-      {unicode}
+    <div className={`flex items-center justify-center h-full w-full`}>
+      <img src={piece.imagePath} alt={`${piece.color} ${piece.type}`} />
     </div>
   )
 }

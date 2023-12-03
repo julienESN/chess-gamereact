@@ -1,6 +1,12 @@
-/* eslint-disable no-inline-comments */
-/* eslint-disable line-comment-position */
-// Vérifie si un mouvement de fou est légal.
+import { isPathClear } from "../utils/chessUtils"
+
+const BISHOP_DIRECTIONS = [
+  { x: 1, y: 1 },
+  { x: 1, y: -1 },
+  { x: -1, y: -1 },
+  { x: -1, y: 1 }
+]
+
 export const isBishopMoveLegal = ({ fromPosition, toPosition, board }) => {
   const piece = board[fromPosition.x][fromPosition.y]
 
@@ -8,35 +14,24 @@ export const isBishopMoveLegal = ({ fromPosition, toPosition, board }) => {
     return false
   }
 
-  if (
-    Math.abs(fromPosition.x - toPosition.x) !==
-    Math.abs(fromPosition.y - toPosition.y)
-  ) {
-    return false // Vérifie si le mouvement est bien en diagonale
+  const moveDirection = {
+    x: Math.sign(toPosition.x - fromPosition.x),
+    y: Math.sign(toPosition.y - fromPosition.y)
+  }
+  const isDiagonalMove = BISHOP_DIRECTIONS.some(
+    (direction) =>
+      direction.x === moveDirection.x && direction.y === moveDirection.y
+  )
+
+  if (!isDiagonalMove) {
+    return false
   }
 
-  const deltaX = toPosition.x > fromPosition.x ? 1 : -1 // Détermine la direction en x
-  const deltaY = toPosition.y > fromPosition.y ? 1 : -1 // Détermine la direction en y
-
-  let checkX = fromPosition.x + deltaX
-  let checkY = fromPosition.y + deltaY
-
-  // Vérifie que toutes les cases sur le chemin sont vides
-  while (checkX !== toPosition.x && checkY !== toPosition.y) {
-    if (board[checkX][checkY]) {
-      return false
-    }
-
-    checkX += deltaX
-    checkY += deltaY
+  if (!isPathClear({ fromPosition, toPosition, board, delta: moveDirection })) {
+    return false
   }
 
   const targetPiece = board[toPosition.x][toPosition.y]
 
-  // Vérifie que la case cible est soit vide, soit occupée par une pièce de couleur opposée
-  if (targetPiece && targetPiece.color === piece.color) {
-    return false
-  }
-
-  return true
+  return !(targetPiece && targetPiece.color === piece.color)
 }

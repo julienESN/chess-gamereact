@@ -1,30 +1,24 @@
-export const createInitialBoard = () => {
-  const PIECES = {
-    r: "rook",
-    n: "knight",
-    b: "bishop",
-    q: "queen",
-    k: "king",
-    p: "pawn"
-  }
-  const COLORS = { upper: "white", lower: "black" }
-  const createChessPiece = (piece, x, y) => ({
-    type: PIECES[piece.toLowerCase()],
-    color: piece === piece.toUpperCase() ? COLORS.upper : COLORS.lower,
-    position: { x, y }
-  })
-  const createRow = (pieces, rowIndex) =>
-    pieces.map((piece, colIndex) => createChessPiece(piece, rowIndex, colIndex))
-  const emptyRow = () => new Array(8).fill(null)
+import { INITIAL_LAYOUT, PIECES } from "./constants"
 
-  return [
-    createRow(["r", "n", "b", "q", "k", "b", "n", "r"], 0),
-    createRow(["p", "p", "p", "p", "p", "p", "p", "p"], 1),
-    emptyRow(),
-    emptyRow(),
-    emptyRow(),
-    emptyRow(),
-    createRow(["P", "P", "P", "P", "P", "P", "P", "P"], 6),
-    createRow(["R", "N", "B", "Q", "K", "B", "N", "R"], 7)
-  ]
+const createChessPiece = (pieceCode, x, y) => {
+  if (!pieceCode) {
+    return null
+  }
+
+  const color = pieceCode.startsWith("w") ? "white" : "black"
+  const pieceConfig = PIECES[pieceCode[1].toLowerCase()]
+
+  return {
+    type: pieceConfig.type,
+    color,
+    position: { x, y },
+    imagePath: `${pieceConfig.imagePath + (color === "white" ? "w" : "b")}.svg`
+  }
 }
+
+export const createInitialBoard = () =>
+  INITIAL_LAYOUT.map((row, x) =>
+    row.map((pieceCode, y) => createChessPiece(pieceCode, x, y))
+  )
+
+export default createInitialBoard

@@ -1,3 +1,14 @@
+const KING_MOVES = [
+  { x: 1, y: -1 },
+  { x: 1, y: 0 },
+  { x: 1, y: 1 },
+  { x: 0, y: -1 },
+  { x: 0, y: 1 },
+  { x: -1, y: -1 },
+  { x: -1, y: 0 },
+  { x: -1, y: 1 }
+]
+
 export const isKingMoveLegal = ({ fromPosition, toPosition, board }) => {
   const piece = board[fromPosition.x][fromPosition.y]
 
@@ -5,10 +16,15 @@ export const isKingMoveLegal = ({ fromPosition, toPosition, board }) => {
     return false
   }
 
-  if (
-    Math.abs(fromPosition.x - toPosition.x) > 1 ||
-    Math.abs(fromPosition.y - toPosition.y) > 1
-  ) {
+  const moveDelta = {
+    x: toPosition.x - fromPosition.x,
+    y: toPosition.y - fromPosition.y
+  }
+  const isMoveAllowed = KING_MOVES.some(
+    (move) => move.x === moveDelta.x && move.y === moveDelta.y
+  )
+
+  if (!isMoveAllowed) {
     return false
   }
 

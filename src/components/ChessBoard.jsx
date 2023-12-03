@@ -1,9 +1,9 @@
 import React, { useMemo } from "react"
-import { useChess } from "../context/ChessContext"
+import { useChessContext } from "../context/ChessContext"
 import Square from "./Square"
 
 const ChessBoard = () => {
-  const { board } = useChess()
+  const { board } = useChessContext()
   const renderedBoard = useMemo(
     () =>
       board.map((row, rowIndex) => (

@@ -1,5 +1,9 @@
 export const isMoveLegal =
   (moveLegalityFunctions, state) => (pieceToMove, toPosition) => {
+    if (!pieceToMove || !pieceToMove.type) {
+      return false
+    }
+
     const moveCheckFunction =
       moveLegalityFunctions[pieceToMove.type.toLowerCase()]
 

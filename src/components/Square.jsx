@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import ChessPiece from "./ChessPiece"
-import { useChess } from "../context/ChessContext"
+import { useChessContext } from "../context/ChessContext"
 
 const isDarkSquare = (position) => (position.x + position.y) % 2 === 1
 const getSquareClass = (isDark) => (isDark ? "bg-lime-800" : "bg-lime-100")
@@ -27,7 +27,7 @@ const FileLabel = ({ y, label }) => {
   ) : null
 }
 const Square = ({ piece, position }) => {
-  const { handleSquareClick } = useChess()
+  const { handleSquareClick } = useChessContext()
   const handleClick = () => handleSquareClick(position, piece)
   const squareClass = getSquareClass(isDarkSquare(position))
 

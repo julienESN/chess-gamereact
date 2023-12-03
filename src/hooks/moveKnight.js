@@ -1,6 +1,14 @@
-/* eslint-disable no-inline-comments */
-/* eslint-disable line-comment-position */
-// Vérifie si le mouvement est légal pour un cavalier.
+const KNIGHT_MOVES = [
+  { x: 2, y: 1 },
+  { x: 2, y: -1 },
+  { x: -2, y: 1 },
+  { x: -2, y: -1 },
+  { x: 1, y: 2 },
+  { x: 1, y: -2 },
+  { x: -1, y: 2 },
+  { x: -1, y: -2 }
+]
+
 export const isKnightMoveLegal = ({ fromPosition, toPosition, board }) => {
   const piece = board[fromPosition.x][fromPosition.y]
 
@@ -8,14 +16,23 @@ export const isKnightMoveLegal = ({ fromPosition, toPosition, board }) => {
     return false
   }
 
-  // Calcule la différence en x et en y entre la position de départ et d'arrivée.
-  const dx = Math.abs(fromPosition.x - toPosition.x)
-  const dy = Math.abs(fromPosition.y - toPosition.y)
-  // Un mouvement de cavalier est valide s'il se déplace en L (2 cases dans une direction et 1 dans l'autre).
-  const isValidMove = (dx === 2 && dy === 1) || (dx === 1 && dy === 2)
-  // Vérifie également si la case d'arrivée est vide ou occupée par une pièce adverse.
-  const targetPiece = board[toPosition.x][toPosition.y]
-  const isCapture = targetPiece && targetPiece.color !== piece.color
+  const moveDelta = {
+    x: toPosition.x - fromPosition.x,
+    y: toPosition.y - fromPosition.y
+  }
+  const isMoveAllowed = KNIGHT_MOVES.some(
+    (move) => move.x === moveDelta.x && move.y === moveDelta.y
+  )
 
-  return isValidMove && (!targetPiece || isCapture)
+  if (!isMoveAllowed) {
+    return false
+  }
+
+  const targetPiece = board[toPosition.x][toPosition.y]
+
+  if (targetPiece && targetPiece.color === piece.color) {
+    return false
+  }
+
+  return true
 }

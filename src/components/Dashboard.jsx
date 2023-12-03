@@ -1,9 +1,9 @@
 import React, { memo } from "react"
-import { useChess } from "../context/ChessContext"
+import { useChessContext } from "../context/ChessContext"
 import AlgebraicNotationDisplay from "./AlgebraicNotationDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 const Dashboard = () => {
-  const { gameStatus, startGame, resetGame } = useChess()
+  const { gameStatus, startGame, resetGame } = useChessContext()
 
   return (
     <div className="dashboard flex flex-col items-center">
