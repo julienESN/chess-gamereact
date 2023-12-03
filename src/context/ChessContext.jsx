@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useReducer, useMemo } from "react"
-import { chessReducer, initialState } from "../reducers/chessReducer"
+import { chessReducer, getInitialState } from "../reducers/chessReducer"
 import { useGameControls } from "../hooks/useGameControls"
 import { usePieceSelection } from "../hooks/usePieceSelection"
 
-const ChessContext = createContext()
+export const ChessContext = createContext()
 const ChessProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(chessReducer, initialState)
+  const [state, dispatch] = useReducer(chessReducer, getInitialState())
   const { setBoard, startGame, resetGame, movePiece, canMove } =
     useGameControls(state, dispatch)
   const { selectedPiece, handlePieceSelection, setSelectedPiece } =

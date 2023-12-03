@@ -1,4 +1,3 @@
-// ChessPiece.jsx
 import React, { memo } from "react"
 
 const ChessPiece = ({ piece }) => {

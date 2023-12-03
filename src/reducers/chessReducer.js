@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createInitialBoard } from "../utils/createInitialBoard"
 import { updateBoardForMove } from "../utils/updateBoardForMove"
 import { updateMoveHistory } from "../utils/updateMoveHistory"
@@ -8,6 +7,7 @@ export const CHANGE_PLAYER = "CHANGE_PLAYER"
 export const RESET_GAME = "RESET_GAME"
 export const MOVE_PIECE = "MOVE_PIECE"
 export const CAPTURE_PIECE = "CAPTURE_PIECE"
+const KING_PIECE_TYPE = "king"
 export const chessReducer = (state, action) => {
   switch (action.type) {
     case SET_BOARD:
@@ -17,14 +17,7 @@ export const chessReducer = (state, action) => {
       return { ...state, gameStatus: "playing" }
 
     case RESET_GAME:
-      return {
-        board: createInitialBoard(),
-        currentPlayer: 1,
-        capturedPieces: { player1: [], player2: [] },
-        playerTimes: { player1: 0, player2: 0 },
-        gameStatus: "waiting",
-        moveHistory: []
-      }
+      return getInitialState()
 
     case MOVE_PIECE: {
       const { fromPosition, toPosition, piece, notation } = action.payload
@@ -46,6 +39,11 @@ export const chessReducer = (state, action) => {
 
     case CAPTURE_PIECE: {
       const { player, capturedPiece } = action.payload
+
+      if (capturedPiece.type === KING_PIECE_TYPE) {
+        return { ...getInitialState(), gameStatus: "reset" }
+      }
+
       const playerKey = player === 1 ? "player1" : "player2"
 
       return {
@@ -61,11 +59,11 @@ export const chessReducer = (state, action) => {
       return state
   }
 }
-export const initialState = {
+export const getInitialState = () => ({
   board: createInitialBoard(),
   currentPlayer: 1,
   capturedPieces: { player1: [], player2: [] },
   playerTimes: { player1: 0, player2: 0 },
   gameStatus: "waiting",
   moveHistory: []
-}
+})
