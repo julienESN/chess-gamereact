@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { createInitialBoard } from "../utils/createInitialBoard"
-
+import { updateBoardForMove } from "../utils/updateBoardForMove"
+import { updateMoveHistory } from "../utils/updateMoveHistory"
 export const SET_BOARD = "SET_BOARD"
 export const START_GAME = "START_GAME"
 export const CHANGE_PLAYER = "CHANGE_PLAYER"
@@ -27,27 +28,25 @@ export const chessReducer = (state, action) => {
 
     case MOVE_PIECE: {
       const { fromPosition, toPosition, piece, notation } = action.payload
-      const newBoard = [...state.board]
-      newBoard[fromPosition.x][fromPosition.y] = null
-      newBoard[toPosition.x][toPosition.y] = piece
-      const newMoveCount = { ...state.moveCount }
-      const currentPlayer = state.currentPlayer === 1 ? "player1" : "player2"
-      newMoveCount[currentPlayer] += 1
+      const newBoard = updateBoardForMove({
+        board: state.board,
+        fromPosition,
+        toPosition,
+        piece
+      })
+      const newMoveHistory = updateMoveHistory(state.moveHistory, notation)
 
       return {
         ...state,
         board: newBoard,
         currentPlayer: state.currentPlayer === 1 ? 2 : 1,
-        moveHistory: [...state.moveHistory, notation]
+        moveHistory: newMoveHistory
       }
     }
 
     case CAPTURE_PIECE: {
       const { player, capturedPiece } = action.payload
       const playerKey = player === 1 ? "player1" : "player2"
-      console.log(
-        `Capture piece: Player ${playerKey} captured ${capturedPiece.type}`
-      )
 
       return {
         ...state,

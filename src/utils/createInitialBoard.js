@@ -1,32 +1,29 @@
 export const createInitialBoard = () => {
-  const initialPieces = {
+  const PIECES = {
     r: "rook",
     n: "knight",
     b: "bishop",
     q: "queen",
     k: "king",
-    p: "pawn",
-    R: "Rook",
-    N: "Knight",
-    B: "Bishop",
-    Q: "Queen",
-    K: "King",
-    P: "Pawn"
+    p: "pawn"
   }
+  const COLORS = { upper: "white", lower: "black" }
+  const createChessPiece = (piece, x, y) => ({
+    type: PIECES[piece.toLowerCase()],
+    color: piece === piece.toUpperCase() ? COLORS.upper : COLORS.lower,
+    position: { x, y }
+  })
   const createRow = (pieces, rowIndex) =>
-    pieces.map((piece, colIndex) => ({
-      type: initialPieces[piece],
-      color: piece === piece.toUpperCase() ? "white" : "black",
-      position: { x: rowIndex, y: colIndex }
-    }))
+    pieces.map((piece, colIndex) => createChessPiece(piece, rowIndex, colIndex))
+  const emptyRow = () => new Array(8).fill(null)
 
   return [
     createRow(["r", "n", "b", "q", "k", "b", "n", "r"], 0),
     createRow(["p", "p", "p", "p", "p", "p", "p", "p"], 1),
-    new Array(8).fill(null),
-    new Array(8).fill(null),
-    new Array(8).fill(null),
-    new Array(8).fill(null),
+    emptyRow(),
+    emptyRow(),
+    emptyRow(),
+    emptyRow(),
     createRow(["P", "P", "P", "P", "P", "P", "P", "P"], 6),
     createRow(["R", "N", "B", "Q", "K", "B", "N", "R"], 7)
   ]
